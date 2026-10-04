@@ -5,53 +5,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gandora Xuất Hiện!</title>
     <style>
-        /* Xóa khoảng trắng mặc định và tạo nền đen tuyền */
         body {
             margin: 0;
             padding: 0;
-            background-color: #000000; /* Nền đen để hòa vào hình ảnh */
-            height: 100vh; /* Chiếm toàn bộ chiều cao màn hình */
+            background-color: #000000;
+            height: 100vh;
             display: flex;
-            justify-content: center; /* Căn giữa theo chiều ngang */
-            align-items: center; /* Căn giữa theo chiều dọc */
-            overflow: hidden; /* Chặn thanh cuộn */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            cursor: pointer;
         }
 
-        /* Định dạng hình ảnh */
+        /* 1. Hiệu ứng con quái vật: Phóng to, rung lắc và "thở" */
+        .monster-wrapper {
+            position: relative;
+            max-width: 90%;
+            max-height: 80vh;
+            animation: monsterSummon 2s ease-out forwards, monsterBreathe 3s infinite alternate 2s;
+        }
+
         .gandora-img {
-            max-width: 90%; /* Không vượt quá 90% chiều rộng màn hình */
-            max-height: 90vh; /* Không vượt quá 90% chiều cao màn hình */
-            object-fit: contain;
-            
-            /* Hiệu ứng xuất hiện (tùy chọn) */
-            animation: summon 1.5s ease-out forwards, glow 3s infinite alternate;
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.8));
         }
 
-        /* Hiệu ứng 1: Con quái vật từ từ hiện ra và phóng to nhẹ */
-        @keyframes summon {
-            0% {
-                opacity: 0;
-                transform: scale(0.8);
-                filter: brightness(3) drop-shadow(0 0 20px red);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-                filter: brightness(1) drop-shadow(0 0 10px rgba(255, 0, 0, 0.5));
-            }
+        /* 2. Hiệu ứng mắt lóe sáng (Đốm sáng đè lên mắt) */
+        .eye-glow {
+            position: absolute;
+            top: 38%; /* Căn chỉnh vị trí mắt theo chiều dọc */
+            left: 42%; /* Căn chỉnh vị trí mắt theo chiều ngang */
+            width: 15px;
+            height: 10px;
+            background: radial-gradient(circle, #fff, #ffff00, transparent);
+            border-radius: 50%;
+            opacity: 0;
+            box-shadow: 0 0 20px 10px #ffff00, 0 0 40px 20px #ff0000;
+            animation: eyeFlash 2s infinite alternate 2.5s;
         }
 
-        /* Hiệu ứng 2: Ánh sáng đỏ nhấp nháy nhẹ (tạo cảm giác nguy hiểm) */
-        @keyframes glow {
-            0% { filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.3)); }
-            100% { filter: drop-shadow(0 0 25px rgba(255, 0, 0, 0.8)); }
+        /* 3. Hiệu ứng lửa bập bùng (Lớp phủ màu đỏ cam) */
+        .fire-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at bottom, rgba(255, 69, 0, 0.4), transparent 70%);
+            mix-blend-mode: screen;
+            pointer-events: none;
+            animation: fireFlicker 0.5s infinite alternate;
+        }
+
+        /* 4. Chữ GANDORA hiện ra */
+        .title {
+            color: #fff;
+            font-family: 'Impact', sans-serif;
+            font-size: 4rem;
+            letter-spacing: 10px;
+            margin-top: 20px;
+            opacity: 0;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 40px #ff0000;
+            animation: textReveal 1.5s ease-out forwards 3s; /* Đợi 3 giây mới hiện chữ */
+        }
+
+        /* --- CÁC KEYFRAMES (ĐỊNH NGHĨA CHUYỂN ĐỘNG) --- */
+        
+        @keyframes monsterSummon {
+            0% { opacity: 0; transform: scale(0.5) translateY(50px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes monsterBreathe {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.03) translateY(-5px); } /* Phình to nhẹ và nhấc lên */
+        }
+
+        @keyframes eyeFlash {
+            0% { opacity: 0.2; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.5); } /* Mắt lóe to và sáng rực */
+        }
+
+        @keyframes fireFlicker {
+            0% { opacity: 0.6; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.02); } /* Lửa cháy bập bùng */
+        }
+
+        @keyframes textReveal {
+            0% { opacity: 0; transform: scale(2); filter: blur(10px); }
+            100% { opacity: 1; transform: scale(1); filter: blur(0); }
         }
     </style>
 </head>
 <body>
 
-    <!-- Thay 'gandora.png' bằng đúng tên file hình ảnh bạn đã tải lên GitHub -->
-    <img src="gandora.png" alt="Gandora" class="gandora-img">
+    <!-- Thẻ âm thanh -->
+    <audio id="roarSound" src="gandora_roar.mp3" preload="auto"></audio>
+
+    <!-- Khu vực chứa quái vật và các hiệu ứng -->
+    <div class="monster-wrapper">
+        <img src="gandora.png" alt="Gandora" class="gandora-img">
+        <div class="eye-glow"></div> <!-- Đốm sáng mắt -->
+        <div class="fire-overlay"></div> <!-- Lửa bập bùng -->
+    </div>
+    
+    <!-- Chữ GANDORA -->
+    <div class="title">GANDORA</div>
+
+    <script>
+        // Kích hoạt toàn bộ "Cutscene" khi người dùng bấm vào màn hình
+        document.body.addEventListener('click', function() {
+            var audio = document.getElementById("roarSound");
+            // Phát tiếng gầm
+            audio.play().catch(function(error) {
+                console.log("Trình duyệt chặn âm thanh.");
+            });
+            
+            // Kích hoạt lại các animation (nếu cần)
+            document.querySelector('.monster-wrapper').style.animation = 'none';
+            document.querySelector('.monster-wrapper').offsetHeight; /* Trigger reflow */
+            document.querySelector('.monster-wrapper').style.animation = 'monsterSummon 2s ease-out forwards, monsterBreathe 3s infinite alternate 2s';
+            
+            document.querySelector('.title').style.animation = 'none';
+            document.querySelector('.title').offsetHeight; 
+            document.querySelector('.title').style.animation = 'textReveal 1.5s ease-out forwards 3s';
+
+            // Đổi con trỏ chuột sau khi bấm
+            document.body.style.cursor = 'default';
+        }, { once: true }); // Chỉ bấm được 1 lần để bắt đầu
+    </script>
 
 </body>
 </html>
