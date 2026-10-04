@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gandora Xuất Hiện!</title>
+    <style>
+        /* Xóa khoảng trắng mặc định và tạo nền đen tuyền */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000; /* Nền đen để hòa vào hình ảnh */
+            height: 100vh; /* Chiếm toàn bộ chiều cao màn hình */
+            display: flex;
+            justify-content: center; /* Căn giữa theo chiều ngang */
+            align-items: center; /* Căn giữa theo chiều dọc */
+            overflow: hidden; /* Chặn thanh cuộn */
+        }
+
+        /* Định dạng hình ảnh */
+        .gandora-img {
+            max-width: 90%; /* Không vượt quá 90% chiều rộng màn hình */
+            max-height: 90vh; /* Không vượt quá 90% chiều cao màn hình */
+            object-fit: contain;
+            
+            /* Hiệu ứng xuất hiện (tùy chọn) */
+            animation: summon 1.5s ease-out forwards, glow 3s infinite alternate;
+        }
+
+        /* Hiệu ứng 1: Con quái vật từ từ hiện ra và phóng to nhẹ */
+        @keyframes summon {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+                filter: brightness(3) drop-shadow(0 0 20px red);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                filter: brightness(1) drop-shadow(0 0 10px rgba(255, 0, 0, 0.5));
+            }
+        }
+
+        /* Hiệu ứng 2: Ánh sáng đỏ nhấp nháy nhẹ (tạo cảm giác nguy hiểm) */
+        @keyframes glow {
+            0% { filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.3)); }
+            100% { filter: drop-shadow(0 0 25px rgba(255, 0, 0, 0.8)); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Thay 'gandora.png' bằng đúng tên file hình ảnh bạn đã tải lên GitHub -->
+    <img src="gandora.png" alt="Gandora" class="gandora-img">
+
+</body>
+</html>
